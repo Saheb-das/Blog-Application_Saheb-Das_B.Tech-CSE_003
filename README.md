@@ -4,9 +4,9 @@ Welcome to our Full Stack Blog Website! This project is developed by **Mehedi Ha
 The aim of this project is to provide a responsive and user-friendly platform for users to create, view, and manage blog posts.
 
 ## 🚀 Live Demo
-Check out the [live demo here](#) *(replace with your live demo URL if you have one)*.
-Frontend Github link:-  *(https://github.com/hasankhan10/blog-frontend)*
-Backend Github link:-  *(https://github.com/Saheb-das/Blog-Application_Saheb-Das_B.Tech-CSE_003)*
+ - Check out the [live demo here](#) *(replace with your live demo URL if you have one)*.
+ - Frontend Github link:-  *(https://github.com/hasankhan10/blog-frontend)*
+ - Backend Github link:-  *(https://github.com/Saheb-das/Blog-Application_Saheb-Das_B.Tech-CSE_003)*
 
 ## 📋 Features
 - User authentication (Login/Signup)
