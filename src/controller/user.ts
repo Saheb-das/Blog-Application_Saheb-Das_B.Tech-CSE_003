@@ -5,6 +5,7 @@ import { NextFunction, Response, Request } from "express";
 import userService from "../service/user";
 import { customError } from "../utils/customError";
 import blogService, { IBlog } from "../service/blog";
+import { Types } from "mongoose";
 
 // get a single user
 async function getUser(req: Request, res: Response, next: NextFunction) {
@@ -54,12 +55,11 @@ async function createPostByUser(
   res: Response,
   next: NextFunction
 ) {
-  const user = req.authUser!;
+  const userId = req.userId!;
   const blogContent = req.body;
 
   try {
     const { title, description, keywords }: IBlogContent = blogContent;
-    const userId = user._id as string;
 
     const blogPayload = {
       title: title,
@@ -108,17 +108,22 @@ async function getAllBlogsInUser(
   res: Response,
   next: NextFunction
 ) {
-  try {
-    const userId = req.authUser?._id as string;
+  const { userId } = req.body;
+  // const userId = req.userId!;
 
-    const user = await userService.findUserByProperty("_id", userId);
+  try {
+    if (!userId) {
+      customError("user is not authenticate");
+    }
+
+    const user = await userService.getAllBlogsByUser(userId);
     if (!user) {
       customError("user not found", 400);
     }
 
     res.status(200).json({
       message: "blogs get successfully",
-      username: user.name,
+      username: user.username,
       blogs: user.blogs,
       success: true,
     });
@@ -170,9 +175,7 @@ async function removeBlogByUser(
   next: NextFunction
 ) {
   const { blogId } = req.body;
-  const authUser = req.authUser!;
-
-  const userId = authUser._id as string;
+  const userId = req.userId!;
 
   try {
     // remove from users bloglists
@@ -180,7 +183,7 @@ async function removeBlogByUser(
       "_id",
       userId,
       "blogs",
-      blogId
+      blogId as string
     );
     if (!updatedUser) {
       customError("Item is not deleted", 400);

@@ -13,7 +13,7 @@ import errorHandler from "./middleware/errorHandler";
 const app = express();
 dotenv.config();
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: process.env.CLIENT_URL,

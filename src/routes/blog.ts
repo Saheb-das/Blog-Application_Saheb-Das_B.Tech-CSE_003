@@ -23,7 +23,7 @@ router.get("/", blogController.getAllBlog);
 /**
  * @description - create new blog
  */
-router.post("/", isAuthenticate, blogController.createBlog);
+// router.post("/", isAuthenticate, blogController.createBlog);
 
 /**
  * @description - update blog

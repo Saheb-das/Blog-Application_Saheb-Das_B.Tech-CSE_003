@@ -1,4 +1,5 @@
 // internal import
+import { Types } from "mongoose";
 import Blog from "../model/Blog";
 
 // get all blogs
@@ -20,7 +21,7 @@ export interface IBlog {
   title: string;
   description: string;
   keywords: string[];
-  creator: string;
+  creator: Types.ObjectId;
 }
 
 // create new blog
@@ -75,6 +76,8 @@ async function updateManyInBlog(
 
 // delete blog by property
 async function deleteBlog(key: string, value: string) {
+  console.log("blog key", key, " value", value);
+
   if (key === "_id") {
     return await Blog.findByIdAndDelete(value).exec();
   } else {

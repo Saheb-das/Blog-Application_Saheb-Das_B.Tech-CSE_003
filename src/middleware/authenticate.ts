@@ -4,38 +4,42 @@ import { Request, Response, NextFunction } from "express";
 // internal import
 import { verifyToken } from "../lib/jwtToken";
 import userService from "../service/user";
-import { Document } from "mongoose";
 import { customError } from "../utils/customError";
+import { Types } from "mongoose";
 
 declare global {
   namespace Express {
     interface Request {
-      authUser?: Document; // Use the correct type for your `user` object
+      userId?: Types.ObjectId; // Use the correct type for your `user` object
     }
   }
 }
 
 async function isAuthenticate(req: Request, res: Response, next: NextFunction) {
-  const token = req.headers.authorization?.split(" ")[1];
+  let token = req.headers.authorization;
 
   try {
-    // decode token
     if (!token) {
-      customError("token not provided", 401);
+      return next(customError("token not found", 401));
     }
+
+    token = token.split(" ")[1];
 
     const userPayload = verifyToken(token!);
 
-    const user = await userService.findUserByProperty(
-      "_id",
-      userPayload._id.toString()
-    );
+    if (!userPayload || Types.ObjectId.isValid(userPayload.id)) {
+      res
+        .status(400)
+        .json({ message: "Invalid token payload", success: false });
+    }
+
+    const user = await userService.findUserById(userPayload._id);
     if (!user) {
       res.status(400).json({ message: "Invalid user", success: false });
     }
 
     // user find
-    req.authUser = user;
+    req.userId = user._id.toString();
 
     next();
   } catch (error) {

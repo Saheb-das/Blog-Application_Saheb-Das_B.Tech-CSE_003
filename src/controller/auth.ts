@@ -91,6 +91,8 @@ async function login(req: Request, res: Response, next: NextFunction) {
     next(error);
   }
 }
+
+// forgot password
 function forgotPassword() {}
 
 export default { register, login, forgotPassword };

@@ -10,7 +10,7 @@ const router = express.Router();
 // routes
 
 /**
- * @description - get user
+ * @description - get user.
  */
 router.get("/:userId", userController.getUser);
 
@@ -34,7 +34,10 @@ router.post("/update-blog", userController.modifyExistBlogByUser);
  */
 router.delete("/delete-blog", userController.removeBlogByUser);
 
-router.get("/blogs", userController.getAllBlogsInUser);
+/**
+ * @description - get all blog of loggedIn user
+ */
+router.post("/blogs", userController.getAllBlogsInUser);
 
 /**
  * @description - update user

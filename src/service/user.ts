@@ -1,4 +1,5 @@
 // internal import
+import { Types } from "mongoose";
 import User from "../model/User";
 
 interface IUser {
@@ -13,11 +14,23 @@ async function findUser() {
   return users;
 }
 
+// get user by id
+async function findUserById(userId: Types.ObjectId) {
+  return await User.findById(userId).exec();
+}
+
+async function getAllBlogsByUser(value: Types.ObjectId) {
+  return await User.findById(value).populate("blogs").exec();
+}
+
 // get user by property
-async function findUserByProperty(key: string, value: string) {
+async function findUserByProperty(key: string, value: string | Types.ObjectId) {
   let user;
+  console.log("1st key:", key, " value:", value);
+
   if (key === "_id") {
     user = await User.findById(value).populate("blogs");
+    // console.log("in _id user:", user);
   } else {
     user = await User.findOne({ [key]: value }).populate("blogs");
   }
@@ -69,7 +82,7 @@ async function deleteUser(key: string, value: string) {
 
 async function addItemToLists(
   key: string,
-  userId: string,
+  userId: string | Types.ObjectId,
   field: string,
   payload: string
 ) {
@@ -81,12 +94,10 @@ async function addItemToLists(
 
 async function deleteItemFromLists(
   key: string,
-  userId: string,
+  userId: string | Types.ObjectId,
   field: string,
   payload: string
 ) {
-  console.log();
-
   return await User.updateOne(
     { [key]: userId },
     { $pull: { [field]: payload } } // adds newItem to the items array
@@ -96,7 +107,9 @@ async function deleteItemFromLists(
 // export
 export default {
   findUser,
+  findUserById,
   findUserByProperty,
+  getAllBlogsByUser,
   postUser,
   addItemToLists,
   deleteItemFromLists,
